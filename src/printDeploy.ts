@@ -9,6 +9,32 @@ function hubHost(input: GenerateInput): string | null {
   );
 }
 
+/** POSIX path for shell commands, keeping a leading `./` when present. */
+export function configPath(outDir: string | undefined, file: string): string {
+  if (!outDir || outDir === "." || outDir === "./") return file;
+  const d = outDir.replace(/\\/g, "/").replace(/\/+$/, "");
+  return `${d}/${file}`;
+}
+
+export function renderNextSteps(input: GenerateInput, outDir: string): string {
+  const lines = ["Next (run from the current directory, not inside the output folder):", ""];
+  if (input.role === "hub") {
+    lines.push("```bash");
+    lines.push(`zenohd -c ${configPath(outDir, "zenohd.json5")}`);
+    lines.push("```");
+  } else if (input.integrations.ros2ddsBridge) {
+    lines.push("```bash");
+    lines.push(
+      `zenoh-bridge-ros2dds -c ${configPath(outDir, "zenoh-bridge-ros2dds-robot.json5")}`,
+    );
+    lines.push("```");
+  } else {
+    lines.push(`See ${configPath(outDir, "README.md")} for role-specific commands.`);
+  }
+  lines.push("");
+  return lines.join("\n");
+}
+
 export function renderDeployReadme(input: GenerateInput): string {
   const lines: string[] = [];
   const host = hubHost(input);
@@ -27,9 +53,15 @@ export function renderDeployReadme(input: GenerateInput): string {
   if (input.role === "hub") {
     lines.push("## Run the hub router");
     lines.push("");
+    lines.push("From **this directory** (the folder that contains `zenohd.json5`):");
+    lines.push("");
     lines.push("```bash");
     lines.push("zenohd -c zenohd.json5");
     lines.push("```");
+    lines.push("");
+    lines.push(
+      "If you are still in the parent directory, use `zenohd -c <this-folder>/zenohd.json5` instead.",
+    );
     lines.push("");
     if (input.integrations.agenticros) {
       lines.push(
@@ -61,6 +93,8 @@ export function renderDeployReadme(input: GenerateInput): string {
     lines.push("");
     if (input.integrations.ros2ddsBridge) {
       lines.push("### Robot (zenoh-bridge-ros2dds)");
+      lines.push("");
+      lines.push("From **this directory**:");
       lines.push("");
       lines.push("```bash");
       lines.push("zenoh-bridge-ros2dds -c zenoh-bridge-ros2dds-robot.json5");
@@ -136,6 +170,7 @@ export function renderDeployReadme(input: GenerateInput): string {
   return lines.join("\n");
 }
 
-export function printDeploy(input: GenerateInput): void {
+export function printDeploy(input: GenerateInput, outDir: string): void {
+  process.stdout.write(renderNextSteps(input, outDir));
   process.stdout.write(renderDeployReadme(input));
 }

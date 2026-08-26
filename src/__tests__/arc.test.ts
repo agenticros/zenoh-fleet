@@ -50,7 +50,15 @@ describe("ARC client", () => {
       },
       fetchOk,
     );
-    assert.equal(ok, true);
+    assert.equal(ok.ok, true);
     assert.match(captured ?? "", /10\.0\.0\.1/);
+  });
+
+  it("explains a live-cloud 404 instead of blaming the token", async () => {
+    const { formatArcPublishFailure } = await import("../arc.js");
+    assert.match(
+      formatArcPublishFailure(404, "Cannot PUT /orgs/current/zenoh-fleet"),
+      /does not expose PUT/,
+    );
   });
 });

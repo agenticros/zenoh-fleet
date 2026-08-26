@@ -49,7 +49,11 @@ zenoh-fleet init --role hub --name warehouse-01 --yes
 zenoh-fleet init --role member --name warehouse-01 --join ./warehouse-01/fleet.json --yes
 ```
 
-Hub output: `fleet.json`, `zenohd.json5`, `README.md`.
+Hub output: `fleet.json`, `zenohd.json5`, `README.md`. Start the router from the **parent** directory (or `cd` into the output folder first):
+
+```bash
+zenohd -c ./warehouse-01/zenohd.json5
+```
 
 Member output (by integration): `fleet.json`, `zenoh-bridge-ros2dds-robot.json5`, optional `rmw-zenoh-session.json5`, `README.md`.
 

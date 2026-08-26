@@ -32,15 +32,43 @@ export async function pullZenohFleet(
   return body;
 }
 
+export interface ArcPublishResult {
+  ok: boolean;
+  status: number;
+  detail: string;
+}
+
+export function formatArcPublishFailure(status: number, body: string): string {
+  if (status === 404 || /Cannot PUT/i.test(body)) {
+    return "ARC does not expose PUT /orgs/current/zenoh-fleet yet (cloud returned 404). Configs still work locally — copy fleet.json or pass --join / --hub-ip on other machines until that API is deployed.";
+  }
+  if (status === 401) {
+    return "ARC rejected the API token. Run `npx agenticros login` again.";
+  }
+  if (/Not in an organization/i.test(body)) {
+    return "This login is not in an organization. Create or join an org on https://cloud.agenticros.com, then retry.";
+  }
+  const snippet = body.replace(/\s+/g, " ").trim().slice(0, 200);
+  return `ARC publish failed (HTTP ${status})${snippet ? `: ${snippet}` : ""}.`;
+}
+
 export async function publishZenohFleet(
   token: string,
   record: ArcZenohFleet,
   fetchImpl: typeof fetch = fetch,
-): Promise<boolean> {
+): Promise<ArcPublishResult> {
   const res = await fetchImpl(`${arcBaseUrl()}/orgs/current/zenoh-fleet`, {
     method: "PUT",
     headers: headers(token),
     body: JSON.stringify(record),
   });
-  return res.ok;
+  const detail = await res.text();
+  if (res.ok) {
+    return { ok: true, status: res.status, detail };
+  }
+  return {
+    ok: false,
+    status: res.status,
+    detail: formatArcPublishFailure(res.status, detail),
+  };
 }

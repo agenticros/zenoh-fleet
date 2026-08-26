@@ -44,6 +44,7 @@ describe("generateFiles", () => {
     assert.equal(fleet.name, "warehouse-01");
     assert.deepEqual(fleet.hubEndpoints, ["tcp/192.168.0.241:7447"]);
     assert.match(files["README.md"], /zenohd -c zenohd\.json5/);
+    assert.match(files["README.md"], /From \*\*this directory\*\*/);
   });
 
   it("hub private disables multicast", () => {

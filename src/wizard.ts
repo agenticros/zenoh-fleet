@@ -328,7 +328,7 @@ export async function runInit(
   }
 
   process.stdout.write(`Wrote ${Object.keys(files).length} files to ${plan.outDir}\n\n`);
-  printDeploy(plan.input);
+  printDeploy(plan.input, plan.outDir);
 
   if (plan.useArc && ctx.token && plan.input.role === "hub") {
     const record: ArcZenohFleet = {
@@ -342,18 +342,17 @@ export async function runInit(
       hubRobotId: getArcRobotId() ?? null,
     };
     try {
-      const ok = await publishZenohFleet(ctx.token, record, opts?.fetchImpl);
-      if (ok) {
+      const result = await publishZenohFleet(ctx.token, record, opts?.fetchImpl);
+      if (result.ok) {
         process.stdout.write(
           "\nPublished hub endpoints to ARC. Other machines: `npx @agenticros/zenoh-fleet` while logged in (`agenticros login`).\n",
         );
       } else {
-        process.stderr.write(
-          "warning: ARC publish failed; continuing offline. Check org membership and token.\n",
-        );
+        process.stderr.write(`warning: ${result.detail}\n`);
       }
-    } catch {
-      process.stderr.write("warning: ARC publish failed; continuing offline.\n");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      process.stderr.write(`warning: ARC publish failed; continuing offline (${message}).\n`);
     }
   }
 

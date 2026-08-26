@@ -27,4 +27,32 @@ describe("runInit --yes", () => {
     assert.deepEqual(fleet.hubEndpoints, ["tcp/192.168.10.4:7447"]);
     assert.match(readFileSync(join(out, "README.md"), "utf8"), /zenohd -c zenohd\.json5/);
   });
+
+  it("stdout next-step uses the output directory path", async () => {
+    const { renderNextSteps } = await import("../printDeploy.js");
+    const text = renderNextSteps(
+      {
+        role: "hub",
+        advertisedIp: "10.0.0.1",
+        listenEndpoint: "tcp/0.0.0.0:7447",
+        robotNamespace: "",
+        integrations: {
+          agenticros: true,
+          corebrum: true,
+          ros2ddsBridge: true,
+          rmwZenoh: false,
+        },
+        identity: {
+          name: "lab",
+          isolation: "public",
+          tcpPort: 7447,
+          wsPort: 10000,
+          hubEndpoints: ["tcp/10.0.0.1:7447"],
+          wsEndpoint: "ws://10.0.0.1:10000",
+        },
+      },
+      "./local-fleet",
+    );
+    assert.match(text, /zenohd -c \.\/local-fleet\/zenohd\.json5/);
+  });
 });
