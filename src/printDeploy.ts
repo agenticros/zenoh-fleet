@@ -154,17 +154,17 @@ export function renderDeployReadme(input: GenerateInput): string {
   lines.push("Each box runs this CLI independently and picks **hub** or **member**:");
   lines.push("");
   lines.push("```bash");
-  lines.push("npx @agenticros/zenoh-fleet");
+  lines.push("npx zenoh-fleet");
   lines.push("```");
   lines.push("");
   lines.push("Or join from this directory's `fleet.json`:");
   lines.push("");
   lines.push("```bash");
-  lines.push(`npx @agenticros/zenoh-fleet init --role member --name ${name} --join ./fleet.json`);
+  lines.push(`npx zenoh-fleet init --role member --name ${name} --join ./fleet.json`);
   lines.push("```");
   lines.push("");
   lines.push(
-    "If the hub published to AgenticROS Cloud (ARC): log in (`agenticros login`) on the other machine, then run `npx @agenticros/zenoh-fleet` and accept the defaults.",
+    "If the hub published to AgenticROS Cloud (ARC): log in (`agenticros login`) on the other machine, then run `npx zenoh-fleet` and accept the defaults.",
   );
   lines.push("");
 

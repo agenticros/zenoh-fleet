@@ -345,7 +345,7 @@ export async function runInit(
       const result = await publishZenohFleet(ctx.token, record, opts?.fetchImpl);
       if (result.ok) {
         process.stdout.write(
-          "\nPublished hub endpoints to ARC. Other machines: `npx @agenticros/zenoh-fleet` while logged in (`agenticros login`).\n",
+          "\nPublished hub endpoints to ARC. Other machines: `npx zenoh-fleet` while logged in (`agenticros login`).\n",
         );
       } else {
         process.stderr.write(`warning: ${result.detail}\n`);

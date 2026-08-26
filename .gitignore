@@ -4,3 +4,5 @@ dist/
 .DS_Store
 tsconfig.tsbuildinfo
 local-fleet/
+npx-alias/node_modules/
+npx-alias/*.tgz

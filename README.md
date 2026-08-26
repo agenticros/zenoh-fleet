@@ -3,7 +3,8 @@
 Enter-to-accept CLI that writes **compatible Zenoh JSON5** for every machine on a robot fleet. Each box runs the same command, picks **hub** or **member**, and gets the files it should actually start — not a copy-and-tweak of Eclipse `DEFAULT_CONFIG.json5`.
 
 ```bash
-npx @agenticros/zenoh-fleet          # wizard (default)
+npx zenoh-fleet                      # wizard (same CLI as @agenticros/zenoh-fleet)
+npx @agenticros/zenoh-fleet          # scoped name; also works
 zenoh-fleet --help                   # routing + commands
 zenoh-fleet --version
 zenoh-fleet init --role member --yes
