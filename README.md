@@ -9,6 +9,8 @@ zenoh-fleet --version
 zenoh-fleet init --role member --yes
 ```
 
+Run `npx` from any directory **except** a source checkout unless you have run `npm install` there (npm otherwise looks for a local `zenoh-fleet` bin that is not linked). From this repo you can also run `node dist/index.js`.
+
 Apache-2.0. Node ≥ 20. No dependency on Corebrum or `@agenticros/core`.
 
 ## Routing
