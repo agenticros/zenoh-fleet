@@ -53,6 +53,6 @@ describe("runInit --yes", () => {
       },
       "./local-fleet",
     );
-    assert.match(text, /zenohd -c \.\/local-fleet\/zenohd\.json5/);
+    assert.match(text, /zenohd -c \/.*\/local-fleet\/zenohd\.json5/);
   });
 });

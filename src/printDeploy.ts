@@ -1,3 +1,5 @@
+import { resolve } from "node:path";
+
 import { corebrumTcpUrl, hostFromEndpoint } from "./detect.js";
 import type { GenerateInput } from "./types.js";
 
@@ -9,15 +11,14 @@ function hubHost(input: GenerateInput): string | null {
   );
 }
 
-/** POSIX path for shell commands, keeping a leading `./` when present. */
+/** Absolute POSIX path for copy-pasteable shell commands. */
 export function configPath(outDir: string | undefined, file: string): string {
-  if (!outDir || outDir === "." || outDir === "./") return file;
-  const d = outDir.replace(/\\/g, "/").replace(/\/+$/, "");
-  return `${d}/${file}`;
+  const dir = resolve(!outDir || outDir === "." || outDir === "./" ? "." : outDir);
+  return `${dir.replace(/\\/g, "/")}/${file}`;
 }
 
 export function renderNextSteps(input: GenerateInput, outDir: string): string {
-  const lines = ["Next (run from the current directory, not inside the output folder):", ""];
+  const lines = ["Next (absolute path; works from any directory):", ""];
   if (input.role === "hub") {
     lines.push("```bash");
     lines.push(`zenohd -c ${configPath(outDir, "zenohd.json5")}`);
