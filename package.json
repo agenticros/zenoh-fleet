@@ -1,0 +1,52 @@
+{
+  "name": "@agenticros/zenoh-fleet",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Enter-to-accept wizard that writes compatible Zenoh JSON5 for a hub or member on a robot fleet.",
+  "keywords": [
+    "zenoh",
+    "ros",
+    "ros2",
+    "robotics",
+    "fleet",
+    "agenticros",
+    "cli"
+  ],
+  "main": "./dist/index.js",
+  "bin": {
+    "zenoh-fleet": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "test": "tsc && node --test --test-force-exit \"dist/__tests__/*.test.js\"",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
+    "prepublishOnly": "npm run clean && npm run build && npm test"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7.0.0",
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.0",
+    "typescript": "^5.7.0"
+  },
+  "author": "Chris Matthieu",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/agenticros/zenoh-fleet",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agenticros/zenoh-fleet.git"
+  }
+}
